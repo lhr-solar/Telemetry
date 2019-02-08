@@ -1,0 +1,2 @@
+#java -jar ~/bin/fr.jar -de BBTexsunShieldV2.dsn
+java -jar ~/projects/FreeRouting/freerouting-master/binaries/FreeRouting.jar -de RPI3HatV1.1.dsn

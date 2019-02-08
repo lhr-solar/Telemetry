@@ -1,0 +1,20 @@
+# logger.py uses setUpSensorDict() to convert the following sensor list into a Python dictionary
+
+# FORMAT: <sensorID>	<sensorLabel0> ... <sensorLabeln>
+
+# NOTES:
+# - Labels are separated by tabs ('\t')
+# - Pound sign represents a commented line
+# - Sensor index in dictionary is <sensorID> - 1
+
+# Simulated BPS  - State of Charge
+1	SOC0	SOC1	SOC2	SOC3
+
+# BNO055 - Orientation Sensor
+2	ANG0	ANG1	ACC0	ACC1	ACC2	GYR0	GYR1	GYR2	MAG0	MAG1	MAG2
+
+#TSL2561T - Luminosity Sensor
+3	LUX
+
+# Simulated - GPS
+4	LAT(N)	LONG(W)
