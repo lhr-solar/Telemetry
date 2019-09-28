@@ -1,13 +1,7 @@
-echo "Enter Date and time, ex: Sep 20 15:45:00"
+echo "Enter Date and time in UTC time, ex: Sep 20 15:45:00"
+echo "Note that UTC time is 5 hours ahead of central standard time (Texas time), so just add 5 hours"
 read dateTime
-tokens=( $dateTime )
-IFS=':' times=( ${tokens[2]} )
-timeUpdate=$((${times[0]} + 5))
-times[0]=$(($timeUpdate % 24))
-IFS=' '
-dateTime="${tokens[0]} ${tokens[1]} ${times[0]}:${times[1]}:${times[2]}"
 sudo date -s "$dateTime"
-echo "Date and time are set ahead 5 hours so that UTC time aligns with central standard time"
 sudo service hostapd stop
 sudo ifconfig wlan0 down
 echo "Stopped hostadp and shutdown wlan0"
