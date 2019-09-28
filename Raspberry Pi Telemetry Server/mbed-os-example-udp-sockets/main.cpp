@@ -5,14 +5,9 @@
 Watchdog wd;
 // Network interface
 EthernetInterface net;
- 
-// Time protocol implementation : Address: time.nist.gov UDPPort: 37  
- 
-typedef struct {
-    uint32_t secs;         // Transmit Time-stamp seconds.
-}ntp_packet;
- 
+  
 int main() {
+    //Set up watchdog timer to restart system if connection is lost
     wd.Configure(15);
     // Bring up the ethernet interface
     printf("UDP Socket Initializing\n");
@@ -29,6 +24,7 @@ int main() {
     SocketAddress sockAddr;
  
     while(1){
+        // For now just send a random number between 0 and 41 as the speed.
         int random = rand() % 42;
         char out_buffer[512];
         memset(out_buffer, 0, 512);
@@ -37,6 +33,8 @@ int main() {
             printf("Error sending data\n");
         }
         wd.Service();
+        // We wait 5 seconds between each udp packet. This is because
+        // the database and grafana only updat once every 5 seconds
         wait(5);
     }
     

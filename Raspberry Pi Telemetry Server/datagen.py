@@ -35,8 +35,7 @@ measurement = "test_data"
 
 try:
     while True:
-        # randomly generate a number for speed and get time stamp
-        #speed = random.randint(30,50)
+        # Read speed out of the udp packet we receive
         speed = int(sock.recv(4).strip('\0'))
         print(speed)
         timing = time.ctime()
