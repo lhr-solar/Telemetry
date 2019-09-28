@@ -82,4 +82,14 @@ To do this, find the file called ```mbed-os-example-udp-sockets.NUCLEO_F429ZI.bi
 Plug the ethernet port of the nucleo into the raspberry pi.
 
 ### After everything has been installed
-Once everything has been installed, follow the "Running the telemetry system" instructions above.
+Once everything has been set up properly, all you need to do is run the startTelemetry.sh script. This will automatically start all the required services.
+```
+cd ~/bin
+./startTelemetry.sh
+```
+
+Now go back to Grafana and create a new dashboard. Follow these settings:
+
+<img src="https://github.com/crmontminy/solar_car/blob/master/grafana-dash.png" alt="dash" width="70%" height="70%">
+
+You should now have a cute lil graph running across your screen <3
