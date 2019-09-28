@@ -20,7 +20,7 @@ To set up the raspberry pi to work with this code you need to install dnsmasq an
 ```
 sudo apt install dnsmasq hostapd
 ```
-Next, replace the default config file for dnsmasq ```/etc/dnsmasq/conf``` with the dnsmasq.conf file from this github folder file. Next, replace the file ```/etc/hostapd/hostapd.conf``` with the hostapd.conf file in this github folder. Then, open up ```/etc/default/hostapd``` with a text editor and find the line with DAEMON_CONF and replace it with ```DAEMON_CONF="/etc/hostapd/hostapd.conf"```.
+Next, replace the default config file for dnsmasq ```/etc/dnsmasq.conf``` with the dnsmasq.conf file from this github folder file. Next, replace the file ```/etc/hostapd/hostapd.conf``` with the hostapd.conf file in this github folder. Then, open up ```/etc/default/hostapd``` with a text editor and find the line with DAEMON_CONF and replace it with ```DAEMON_CONF="/etc/hostapd/hostapd.conf"```.
 
 
 ### InfluxDB
