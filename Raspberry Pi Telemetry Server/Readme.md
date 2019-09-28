@@ -82,7 +82,7 @@ To do this, find the file called ```mbed-os-example-udp-sockets.NUCLEO_F429ZI.bi
 Plug the ethernet port of the nucleo into the raspberry pi.
 
 ### After everything has been installed
-Once everything has been set up properly, all you need to do is run the startTelemetry.sh script. This will automatically start all the required services.
+Once everything has been set up properly, reboot the Raspberry Pi. Then all you need to do is run the startTelemetry.sh script. This will automatically start all the required services.
 ```
 cd ~/bin
 ./startTelemetry.sh
