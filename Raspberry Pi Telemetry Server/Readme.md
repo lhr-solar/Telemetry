@@ -20,15 +20,16 @@ To set up the raspberry pi to work with this code you need to install dnsmasq an
 ```
 sudo apt install dnsmasq hostapd
 ```
-Next, replace the default config file for dnsmasq ```/etc/dnsmasq.conf``` with the dnsmasq.conf file from this github folder file. Next, replace the file ```/etc/hostapd/hostapd.conf``` with the hostapd.conf file in this github folder. Then, open up ```/etc/default/hostapd``` with a text editor and find the line with DAEMON_CONF and replace it with ```DAEMON_CONF="/etc/hostapd/hostapd.conf"```.
+Next, replace the default config file for dnsmasq ```/etc/dnsmasq.conf``` with the dnsmasq.conf file from this github folder file. Next, replace the file ```/etc/hostapd/hostapd.conf``` with the hostapd.conf file in this github folder. If this file does not exist, just put the hostapd.conf from this github repo into the /etc/hostapd folder. Then, open up ```/etc/default/hostapd``` with a text editor and find the line with DAEMON_CONF and replace it with ```DAEMON_CONF="/etc/hostapd/hostapd.conf"```. Make sure you uncomment the line, i.e. remove the #.
 
 
 ### InfluxDB
 Install InfluxDB with these commands:
 ```
 sudo apt install apt-transport-https
-echo "deb https://repos.influxdata.com/debian jessie stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
-sudo apt update
+echo "deb https://repos.influxdata.com/debian stretch stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+sudo apt-get update && sudo apt-get install influxdb
+sudo service influxdb start
 ```
 Use `sudo nano -c /etc/influxdb/influxdb.conf` to edit the Influx configuration file. Scroll down to the [http] section and uncomment these things:
 * `enabled: false` and change it to `true`
@@ -42,11 +43,11 @@ sudo systemctl start influxdb
 influx
 ```
 Time to type in a whole lot of Influx terminal commands:
+* `CREATE USER admin WITH PASSWORD 'pineapple' WITH ALL PRIVILEGES` - makes admin account
 * `CREATE DATABASE test` - creates the test database
 * `USE test` - swaps to this database
-* `CREATE USER "admin" WITH PASSWORD "pineapple"` - makes admin account
 * `GRANT ALL ON "test" to "admin"` - gives admin all rights
-* `CREATE USER "grafana" WITH PASSWORD "tape"` - grafana needs an account too
+* `CREATE USER grafana WITH PASSWORD 'pineapple'` - grafana needs an account too
 * `GRANT READ ON "test" TO "grafana"` - gives only reading access
 
 ### Grafana
@@ -62,6 +63,7 @@ Start Grafana with:
 sudo service grafana-server start
 ```
 Open up a browser and go to `localhost:3000`. This should pull up the Grafana log in page. The default username and password are both `admin`
+For consistency, change the default password of Grafana to `pineapple`
 
 Click "Add a Data Source" and change to these settings:
 
@@ -75,7 +77,7 @@ To set up the scripts (startTelemetry.sh and telemetryStop.sh) in this folder, p
 
 ### Nucleo setup
 
-Finally, you will need to upload the telemetry ode to a nucleo microcontroll that has an ethernet port (we used the Nucleo-F429ZI).
+Finally, you will need to upload the telemetry ode to a nucleo microcontroller that has an ethernet port (we used the Nucleo-F429ZI).
 
 To do this, find the file called ```mbed-os-example-udp-sockets.NUCLEO_F429ZI.bin``` in this gihub project. Next, plug the nucleo board into your computer. It should show up as a device in you file explorer, similar to a usb flash drive. Drag the file mentioned earlier into the nuclue device. Now the nuclueo is programmed!
 
