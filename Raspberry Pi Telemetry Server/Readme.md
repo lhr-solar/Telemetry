@@ -1,11 +1,16 @@
 # Raspberry Pi Telemetry System Code
-This file contains all code related to UTSVT's Telemetry System that runs on a raspberry pi
+This file contains all code related to UTSVT's Telemetry System that runs on a Raspberry Pi 3
+
 
 ## Running the telemetry system
 If you are using the telemtry system that has already been set up then start here
 
 Once everything has been set up properly, all you need to do is run the startTelemetry.sh script. This will automatically start all the required services. Then, plug the telemtry nucleo into the raspberry pi's ethernet port. To view the data, connect to the wifi hotspot broadcast by the raspberry pi. The network is named TelemetryServer and the password is telemetry. Once connected, open a web browser and type the following in the url bar: "192.168.1.1:3000" (without quotes). The grafana server should come up. If a login is requested, then use admin for both password and username. Now, go to dashboards, and manage. Open "test" and you should see a graph of the data. If you do not see any data, try zooming out. 
 
+# Quick Time Set Up
+Go to the SVT Google drive and go to the Bevolt folder in the Telemetry section. Download the `Telemetry_Pi_Image.img` and etch it onto an SD card using [Etcher](https://www.balena.io/etcher/).
+
+# Slow Time Set Up
 ## Installing required software
 
 Software requiered for raspberry pi:
@@ -20,7 +25,11 @@ To set up the raspberry pi to work with this code you need to install dnsmasq an
 ```
 sudo apt install dnsmasq hostapd
 ```
-Next, replace the default config file for dnsmasq ```/etc/dnsmasq.conf``` with the dnsmasq.conf file from this github folder file. Next, replace the file ```/etc/hostapd/hostapd.conf``` with the hostapd.conf file in this github folder. If this file does not exist, just put the hostapd.conf from this github repo into the /etc/hostapd folder. Then, open up ```/etc/default/hostapd``` with a text editor and find the line with DAEMON_CONF and replace it with ```DAEMON_CONF="/etc/hostapd/hostapd.conf"```. Make sure you uncomment the line, i.e. remove the #.
+Next, replace the default config file for dnsmasq ```/etc/dnsmasq.conf``` with the dnsmasq.conf file from this github folder file. Next, replace the file ```/etc/hostapd/hostapd.conf``` with the hostapd.conf file in this github folder. If this file does not exist, just put the hostapd.conf from this github repo into the /etc/hostapd folder. Then, open up ```/etc/default/hostapd``` with a text editor and find the line with DAEMON_CONF and replace it with ```DAEMON_CONF="/etc/hostapd/hostapd.conf"```. Make sure you uncomment the line, i.e. remove the #. Finally you need to unmask and enable hostapd. Run the following commands:
+```
+sudo systemctl unmask hostapd
+sudo systemctl enable hostapd
+```
 
 
 ### InfluxDB
@@ -49,6 +58,7 @@ Time to type in a whole lot of Influx terminal commands:
 * `GRANT ALL ON "test" to "admin"` - gives admin all rights
 * `CREATE USER grafana WITH PASSWORD 'pineapple'` - grafana needs an account too
 * `GRANT READ ON "test" TO "grafana"` - gives only reading access
+* `CREATE USER rpi3 WITH PASSWORD 'pineapple' WITH ALL PRIVILAGES` - make user for python client
 
 ### Grafana
 Install Grafana with these commands:
