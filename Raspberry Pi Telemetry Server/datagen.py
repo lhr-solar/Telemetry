@@ -9,7 +9,7 @@ import sys
 host = "127.0.1.1"
 port = 8086
 user = "rpi3"
-password = "tape" 
+password = "pineapple" 
 dbname = "test"
 interval = 5
 
@@ -36,8 +36,8 @@ measurement = "test_data"
 try:
     while True:
         # Read speed out of the udp packet we receive
-        speed = int(sock.recv(4).strip('\0'))
-        print(speed)
+        recieveString = sock.recv(4).decode('utf-8').strip('\0')
+        speed = int(recieveString)
         timing = time.ctime()
         
         # print and make data packet
