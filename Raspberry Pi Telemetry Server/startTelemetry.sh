@@ -17,6 +17,6 @@ sudo service grafana-server start
 echo "Launched grafana-server"
 lxterminal -e influx
 echo "Launched influx server"
-lxterminal -e python3 ~/Documents/datagen.py
-echo "Launched python upd socket"
+lxterminal -e python3 ~/Documents/pullTelData.py
+echo "Launched python web scraper"
 echo "Settings files are located in /etc/dnsmasq.conf and /etc/hostapd/hostapd.conf"
