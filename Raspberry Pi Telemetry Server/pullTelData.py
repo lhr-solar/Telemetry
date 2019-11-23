@@ -7,9 +7,21 @@ import sys
 from selenium import webdriver
 from bs4 import BeautifulSoup as bs
 import json
+import threading
 
-#Set up web driver
-#driver = webdriver.Firefox(executable_path='/home/pi/Documents/geckodriver')
+loadStatus = True
+
+#set up web driver
+#driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver')
+#driver.set_page_load_timeout(30)
+
+#set up thread to stop page loading if it takes too long
+def timeoutThread():
+	loadStatus = True
+	time.sleep(15)
+	if loadStatus:
+		print("stopping window")
+		driver.execute_script("return window.stop")
 
 host = "127.0.1.1"
 port = 8086
@@ -30,19 +42,28 @@ client = InfluxDBClient(host, port, user, password, dbname)
 # name table
 measurement = "test_data"
 
-print("accessing webpage")
 #driver.get('http://192.168.0.120:80')
+
+#time.sleep(10)
 
 try:
 	while True:
+		print("accessing web page")
+		#try:
+		#	threading.Thread(target=timeoutThread).start()
+		#	driver.get('http://192.168.0.120:80')
+		#	loadStatus = False
+		#except:
+		#	print("connection error")
+
 		print("parsing webpage")
 		#content = driver.page_source
 		content = ''
-		with open('/home/pi/Downloads/telemetry.html', "r") as f:
+		with open('/home/pi/Downloads/telemetry2.html', "r") as f:
 			content = f.read()
 		soup = bs(content, features="html.parser")
 		data = []
-		classNames = ['temperature', 'voltage', 'current', 'soc', 'flags']
+		classNames = ['temperature', 'voltage', 'current', 'soc', 'flags', 'motor', 'mppt']
 		for className in classNames:
 			for p in soup.findAll('p', class_ = className):
 				parsedString = p.contents[0].split(' | ')
@@ -56,7 +77,7 @@ try:
 					IDPairs = {}
 					for string in parsedString:
 						if (len(string) > 1):
-							splitStr = string.split(' ')
+							splitStr = string.split(': ')
 							for i in range(len(splitStr)):
 								splitStr[i] = splitStr[i].strip('\n')
 							IDPairs[splitStr[0].strip(' ')] = float(splitStr[1].strip(' '))
@@ -72,7 +93,6 @@ try:
 				data.append(dataPoint)
 			
 		print(json.dumps(data))
-		print(type(data[0]))
 		client.write_points(data)
 		time.sleep(interval)
 
