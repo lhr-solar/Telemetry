@@ -12,8 +12,8 @@ import threading
 loadStatus = True
 
 #set up web driver
-#driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver')
-#driver.set_page_load_timeout(30)
+driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver')
+driver.set_page_load_timeout(10)
 
 #set up thread to stop page loading if it takes too long
 def timeoutThread():
@@ -21,7 +21,7 @@ def timeoutThread():
 	time.sleep(15)
 	if loadStatus:
 		print("stopping window")
-		driver.execute_script("return window.stop")
+		driver.execute_script("window.stop();")
 
 host = "127.0.1.1"
 port = 8086
@@ -46,21 +46,34 @@ measurement = "test_data"
 
 #time.sleep(10)
 
+def startDriver():
+	driver.get('http://192.168.0.120:80')
+
 try:
 	while True:
-		print("accessing web page")
-		#try:
-		#	threading.Thread(target=timeoutThread).start()
-		#	driver.get('http://192.168.0.120:80')
-		#	loadStatus = False
-		#except:
-		#	print("connection error")
+		loadStatus = True
+		fail_count = 0
+		while loadStatus:
+			try:
+				if fail_count > 5:
+					driver.close()
+					driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver')
+					driver.set_page_load_timeout(10)
+					fail_count = 0
+				print('accessing web page')
+				#threading.Thread(target=timeoutThread).start()
+				startDriver()
+				loadStatus = False
+			except:
+				print('retrying webpage')
+				loadStatus = True
+				fail_count += 1
 
 		print("parsing webpage")
-		#content = driver.page_source
-		content = ''
-		with open('/home/pi/Downloads/telemetry2.html', "r") as f:
-			content = f.read()
+		content = driver.page_source
+		#content = ''
+		#with open('/home/pi/Downloads/telemetry2.html', "r") as f:
+		#	content = f.read()
 		soup = bs(content, features="html.parser")
 		data = []
 		classNames = ['temperature', 'voltage', 'current', 'soc', 'flags', 'motor', 'mppt']
