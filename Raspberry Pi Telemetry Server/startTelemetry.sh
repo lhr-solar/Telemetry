@@ -1,5 +1,5 @@
 echo "Enter Date and time in UTC time, ex: Sep 20 15:45:00"
-echo "Note that UTC time is 5 hours ahead of central standard time (Texas time), so just add 5 hours"
+echo "Note that UTC time is 5 hours ahead of central standard time (Texas time), so just add 5 hours, or add 6 hours if day light savings time is active"
 read dateTime
 sudo date -s "$dateTime"
 sudo service hostapd stop
@@ -17,6 +17,6 @@ sudo service grafana-server start
 echo "Launched grafana-server"
 lxterminal -e influx
 echo "Launched influx server"
-lxterminal -e python3 ~/Documents/pullTelData.py
+lxterminal -e python3 ./pullTelData.py
 echo "Launched python web scraper"
 echo "Settings files are located in /etc/dnsmasq.conf and /etc/hostapd/hostapd.conf"

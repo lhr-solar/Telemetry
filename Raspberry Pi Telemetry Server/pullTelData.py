@@ -12,16 +12,8 @@ import threading
 loadStatus = True
 
 #set up web driver
-driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver')
+driver = webdriver.Chrome(executable_path='./chromedriver')
 driver.set_page_load_timeout(10)
-
-#set up thread to stop page loading if it takes too long
-def timeoutThread():
-	loadStatus = True
-	time.sleep(15)
-	if loadStatus:
-		print("stopping window")
-		driver.execute_script("window.stop();")
 
 host = "127.0.1.1"
 port = 8086
@@ -42,41 +34,41 @@ client = InfluxDBClient(host, port, user, password, dbname)
 # name table
 measurement = "test_data"
 
-#driver.get('http://192.168.0.120:80')
-
-#time.sleep(10)
-
 def startDriver():
 	driver.get('http://192.168.0.120:80')
 
 try:
+	#Main while loop that will continuously scrape the web page
 	while True:
 		loadStatus = True
 		fail_count = 0
+		#this while loop handles loading the web page and retrying if loading fails
 		while loadStatus:
 			try:
 				if fail_count > 5:
 					driver.close()
-					driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver')
+					driver = webdriver.Chrome(executable_path='./chromedriver')
 					driver.set_page_load_timeout(10)
 					fail_count = 0
+					print('failed to access webpage 5 times in a row, restarting browser')
 				print('accessing web page')
-				#threading.Thread(target=timeoutThread).start()
 				startDriver()
 				loadStatus = False
 			except:
 				print('retrying webpage')
 				loadStatus = True
 				fail_count += 1
+				#If we get past 5 fails we know the web browser has been closed so we exit
+				if fail_count > 6:
+					print('web browser has been closed, ending python web scraper process')
+					sys.exit()
 
 		print("parsing webpage")
 		content = driver.page_source
-		#content = ''
-		#with open('/home/pi/Downloads/telemetry2.html', "r") as f:
-		#	content = f.read()
 		soup = bs(content, features="html.parser")
 		data = []
 		classNames = ['temperature', 'voltage', 'current', 'soc', 'flags', 'motor', 'mppt']
+		#This for loop handles parsing the information displayed in the web page
 		for className in classNames:
 			for p in soup.findAll('p', class_ = className):
 				parsedString = p.contents[0].split(' | ')
@@ -106,6 +98,7 @@ try:
 				data.append(dataPoint)
 			
 		print(json.dumps(data))
+		#here we write the parsed data to the database
 		client.write_points(data)
 		time.sleep(interval)
 
