@@ -1,6 +1,25 @@
 # Raspberry Pi Telemetry System Code
 This file contains all code related to UTSVT's Telemetry System that runs on a Raspberry Pi 3
 
+# Latests web scraping method instructions:
+These instructions will outline how to use the web scraping method to get data from the telemetry nucleo on the solar vehicle. This is the current prefered method to receive the data.
+
+## Quick setup
+Go to the SVT Google drive and go to the Bevolt folder in the Telemetry section. Download the `RaspberryPiWebscrapingImage.zip`, extract it, and etch it onto an SD card using [Etcher](https://www.balena.io/etcher/). Now, connect a mouse, keyboawrd, usb wifi dongle, and monitor, and boot the raspberry pi. Once the pi has booted, go to the wifi options in the upper right, select wlan1, and connect it to the wifi hotspot that the nucleo in the car is broadcasting on. Then go to ```/home/pi/Documents/Telemetry/Raspberry Pi Telemetry Server``` and run the ```startTelemetry.sh``` script by typing ```./startTelemetry.sh```. This should start everything automatically.
+
+To view the data, connect to the wifi hotspot broadcast by the raspberry pi. The network is named TelemetryServer and the password is telemetry. Once connected, open a web browser and type the following in the url bar: "192.168.1.1:3000" (without quotes). The grafana server should come up. If a login is requested, then use admin for both password and username.
+
+## Full setup
+To do a full setup, install a fresh rasbian stretch os on an sd card for your raspberry pi. Follow the old instructions below for setting up Grafana, InfluxDB, hostapd, and dnsmasq. Then, just clone this github and run the startTelemetry.sh file. The setup instructions for setting up the grafana graphs is for our old udp system, so you will need to set up the graphs based on the data that is being pulled by the raspberry pi.
+
+
+
+
+
+
+
+# Old UDP streamig instructions
+These inscruction are old and may not be up to date. They outline how to set up the nucleo to receive and display data streamed via udp from the telemetry nucleo on the car.
 
 ## Running the telemetry system
 If you are using the telemtry system that has already been set up then start here
@@ -83,7 +102,7 @@ Hit test on the bottom, all you should see is just a cute lil green box saying e
 
 ### Scripts
 
-To set up the scripts (startTelemetry.sh and telemetryStop.sh) in this folder, place them in ```~/bin``` on the raspberry pi (you may need to create a bin directory). Also, place the datagen.py script in ```~/Documents``` on the raspberry pi.
+To set up the scripts (startTelemetry-old.sh and telemetryStop.sh) just leave them in this folder. Also, just leave the datagen.py script in this folder.
 
 ### Nucleo setup
 
