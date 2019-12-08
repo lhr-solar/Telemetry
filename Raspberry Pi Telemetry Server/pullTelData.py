@@ -22,7 +22,7 @@ password = "pineapple"
 dbname = "test"
 interval = 5
 
-# set up SIGINT handler so that the socket is closed if the program is ended
+# set up SIGINT handler so that the program is properly closed if it is interrupted
 def signal_handler(sig, frame):
 	sys.exit(0)
 
