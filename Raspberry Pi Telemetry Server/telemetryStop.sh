@@ -5,6 +5,6 @@ echo "stopped dnsmasq"
 sudo service hostapd stop
 echo "stopped hostapd"
 sudo pkill "python"
-echo "stopped python socket"
+echo "stopped python web scraper"
 sudo killall -SIGKILL influx
 echo "stopped influxdb"
